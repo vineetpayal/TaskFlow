@@ -6,4 +6,11 @@
     </style>
 
     <style name="Theme.TaskFlow" parent="Base.Theme.TaskFlow" />
+
+    <style name="Theme.Design.NoActionBar" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
 </resources>
