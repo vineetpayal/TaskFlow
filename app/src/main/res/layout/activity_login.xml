@@ -5,17 +5,17 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterActivity">
-    
+    tools:context=".LoginActivity">
+
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_register_activity"
+        android:id="@+id/toolbar_login_activity"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
-        
+
         <TextView
             android:textSize="24sp"
             android:gravity="center_vertical"
-            android:text="Register"
+            android:text="Login"
             android:textColor="@color/primaryColour"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
@@ -33,19 +33,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/name_input_layout"
-                app:startIconDrawable="@drawable/ic_person"
-                style="@style/ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="8dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/name_hint" />
-            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/email_input_layout"
@@ -85,7 +72,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="16dp"
                 android:background="@drawable/shape_button_rounded"
-                android:text="Register"
+                android:text="@string/btn_login"
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
 
