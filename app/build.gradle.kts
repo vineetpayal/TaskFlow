@@ -8,6 +8,10 @@ android {
     namespace = "com.vineet.taskflow"
     compileSdk = 34
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "com.vineet.taskflow"
         minSdk = 24
@@ -40,6 +44,7 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.core:core-ktx:1.7.0")
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation(libs.androidx.core.ktx)

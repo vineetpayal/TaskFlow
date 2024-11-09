@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "357182102417",
+    "project_id": "task-flow-d8841",
+    "storage_bucket": "task-flow-d8841.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:357182102417:android:fe8856d41d736732369830",
+        "android_client_info": {
+          "package_name": "com.vineet.taskflow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCm5TL1TCh4Ny_IUWFufhl8gyAUpk_XJVE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
