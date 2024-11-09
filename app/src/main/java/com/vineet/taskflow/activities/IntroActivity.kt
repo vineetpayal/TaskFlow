@@ -1,4 +1,4 @@
-package com.vineet.taskflow
+package com.vineet.taskflow.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,8 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.vineet.taskflow.R
 
-class IntroActivity : AppCompatActivity() {
+class IntroActivity : BaseActivity() {
 
      lateinit var btnRegister : Button
     lateinit var btnLogin : Button
@@ -27,11 +28,11 @@ class IntroActivity : AppCompatActivity() {
         btnLogin = findViewById(R.id.btn_login)
 
         btnRegister.setOnClickListener {
-            startActivity(Intent(this,RegisterActivity::class.java))
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
 
         btnLogin.setOnClickListener {
-            startActivity(Intent(this,LoginActivity::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
         }
 
     }

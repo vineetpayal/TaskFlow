@@ -7,7 +7,7 @@
     android:background="@drawable/splash_background"
     android:layout_height="match_parent"
     android:gravity="center"
-    tools:context=".SplashActivity">
+    tools:context=".activities.SplashActivity">
 
     <TextView
         android:fontFamily="sans-serif-condensed-medium"
