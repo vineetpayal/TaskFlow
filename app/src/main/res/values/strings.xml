@@ -15,4 +15,7 @@
     <string name="name_hint">Name</string>
     <string name="btn_login">Login</string>
     <string name="please_wait">Please Wait</string>
+
+    <string name="nav_my_profile">My Profile</string>
+    <style name="nav_sign_out">Sign Out</style>
 </resources>
