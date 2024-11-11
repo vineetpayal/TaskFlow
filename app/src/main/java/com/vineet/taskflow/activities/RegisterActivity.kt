@@ -12,6 +12,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.vineet.taskflow.R
 import com.vineet.taskflow.databinding.ActivityRegisterBinding
+import com.vineet.taskflow.firebase.FirestoreClass
+import com.vineet.taskflow.models.User
 
 class RegisterActivity : BaseActivity() {
     private lateinit var binding: ActivityRegisterBinding
@@ -38,24 +40,28 @@ class RegisterActivity : BaseActivity() {
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(
                 email, password
             ).addOnCompleteListener { task ->
-                hideProgressDialog()
                 if (task.isSuccessful) {
                     val firebaseUser: FirebaseUser = task.result!!.user!!
                     val registeredEmail = firebaseUser.email!!
-                    Toast.makeText(
-                        this,
-                        "$name you have successfully registered with $registeredEmail",
-                        Toast.LENGTH_SHORT
-                    ).show()
 
-                    FirebaseAuth.getInstance().signOut()
-                    finish()
+                    val user = User(firebaseUser.uid,name,registeredEmail)
+                    FirestoreClass().registerUser(this,user)
                 }else{
                     showErrorSnackBar(task.exception!!.message.toString())
                 }
             }
         }
 
+    }
+
+    fun userRegisteredSuccess(){
+        hideProgressDialog()
+        Toast.makeText(
+            this,
+            "You have successfully registered",
+            Toast.LENGTH_SHORT).show()
+        FirebaseAuth.getInstance().signOut()
+        finish()
     }
 
     private fun validateForm(name: String, email: String, password: String): Boolean {

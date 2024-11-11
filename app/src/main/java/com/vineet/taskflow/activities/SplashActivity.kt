@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.vineet.taskflow.R
+import com.vineet.taskflow.firebase.FirestoreClass
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,9 +22,18 @@ class SplashActivity : AppCompatActivity() {
         }
 
         Handler().postDelayed({
-            startActivity(Intent(this, IntroActivity::class.java))
-             finish()
-        },2500)
+
+            var currentUserId = FirestoreClass().getCurrentUserId()
+
+            if (currentUserId.isNotEmpty()) {
+                startActivity(Intent(this, MainActivity::class.java))
+            } else {
+
+                startActivity(Intent(this, IntroActivity::class.java))
+
+            }
+            finish()
+        }, 2500)
 
 
     }

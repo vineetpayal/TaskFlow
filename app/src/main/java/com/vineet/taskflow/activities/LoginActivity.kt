@@ -12,6 +12,8 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.vineet.taskflow.R
 import com.vineet.taskflow.databinding.ActivityLoginBinding
+import com.vineet.taskflow.firebase.FirestoreClass
+import com.vineet.taskflow.models.User
 
 class LoginActivity : BaseActivity() {
 
@@ -43,15 +45,17 @@ class LoginActivity : BaseActivity() {
                 .addOnCompleteListener { task ->
                     hideProgressDialog()
                     if (task.isSuccessful) {
-                        val user = auth.currentUser
-                        Toast.makeText(this, "successfully signed in", Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(this, MainActivity::class.java))
-                        finish()
+                        FirestoreClass().loginUser(this)
                     } else {
                         showErrorSnackBar(task.exception!!.message.toString())
                     }
                 }
         }
+    }
+
+    fun loginSuccess(loggedInUser: User) {
+        hideProgressDialog()
+        startActivity(Intent(this, MainActivity::class.java))
     }
 
     private fun validateForm(email: String, password: String): Boolean {
@@ -84,4 +88,6 @@ class LoginActivity : BaseActivity() {
         }
 
     }
+
+
 }
