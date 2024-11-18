@@ -1,6 +1,8 @@
 package com.vineet.taskflow.firebase
 
 import android.app.Activity
+import android.util.Log
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
@@ -24,20 +26,37 @@ class FirestoreClass {
             }
     }
 
+    fun updateUserProfileData(activity: MyProfileActivity, userHashMap: Map<String, Any>) {
+        mFireStore.collection(Constants.USERS)
+            .document(getCurrentUserId())
+            .update(userHashMap)
+            .addOnSuccessListener {
+                Toast.makeText(activity, "Profile Updated Successfully!", Toast.LENGTH_SHORT).show()
+                activity.profileUpdateSuccess()
+            }
+            .addOnFailureListener { e ->
+                Log.i(activity.javaClass.simpleName, "updateUserProfileData: " + e)
+                activity.hideProgressDialog()
+                Toast.makeText(activity, "Error while updating the profile!", Toast.LENGTH_SHORT).show()
+            }
+    }
+
     fun loadUserData(activity: Activity) {
         mFireStore.collection(Constants.USERS)
             .document(getCurrentUserId())
             .get()
             .addOnSuccessListener { document ->
                 val loggedInUser = document.toObject(User::class.java)!!
-                when(activity){
-                    is LoginActivity ->{
+                when (activity) {
+                    is LoginActivity -> {
                         activity.loginSuccess(loggedInUser)
                     }
-                    is MainActivity ->{
+
+                    is MainActivity -> {
                         activity.updateNavigationUserDetails(loggedInUser)
                     }
-                    is MyProfileActivity ->{
+
+                    is MyProfileActivity -> {
                         activity.setUserDataInUI(loggedInUser)
                     }
                 }

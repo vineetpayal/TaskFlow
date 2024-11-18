@@ -25,4 +25,5 @@
     <string name="name">name\n</string>
     <string name="email">email\n</string>
     <string name="image_contentDescription">user profile</string>
+
 </resources>

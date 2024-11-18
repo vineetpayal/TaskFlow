@@ -52,6 +52,9 @@ dependencies {
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation ("com.github.bumptech.glide:glide:4.16.0")
 
+    implementation("io.appwrite:sdk-for-android:6.0.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
