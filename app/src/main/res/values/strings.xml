@@ -17,6 +17,7 @@
     <string name="please_wait">Please Wait</string>
 
     <string name="nav_my_profile">My Profile</string>
+
     <style name="nav_sign_out">Sign Out</style>
 
     <string name="mobile">Mobile</string>
@@ -26,4 +27,8 @@
     <string name="email">email\n</string>
     <string name="image_contentDescription">user profile</string>
 
+
+    <string name="create_board_title">Create Board</string>
+    <string name="create">CREATE</string>
+    <string name="board_name">Board Name</string>
 </resources>

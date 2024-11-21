@@ -1,5 +1,6 @@
 package com.vineet.taskflow.activities
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -16,6 +17,11 @@ import com.vineet.taskflow.models.User
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
+
+    companion object {
+        const val MY_PROFILE_ACTIVITY_REQUEST_CODE: Int = 11
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -25,6 +31,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         binding.navView.setNavigationItemSelectedListener(this)
 
         FirestoreClass().loadUserData(this)
+
+
+        binding.appBarLayout.btnAdd.setOnClickListener {
+            startActivity(Intent(this, CreateBoardActivity::class.java))
+        }
+
     }
 
     private fun setUpActionBar() {
@@ -57,7 +69,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_my_profile -> {
-                startActivity(Intent(this, MyProfileActivity::class.java))
+                startActivityForResult(
+                    Intent(this, MyProfileActivity::class.java),
+                    MY_PROFILE_ACTIVITY_REQUEST_CODE
+                )
             }
 
             R.id.nav_sign_out -> {
@@ -74,6 +89,15 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         return true
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == MY_PROFILE_ACTIVITY_REQUEST_CODE) {
+                FirestoreClass().loadUserData(this)
+            }
+        }
+    }
+
     fun updateNavigationUserDetails(loggedInUser: User) {
         Glide
             .with(this)
@@ -82,6 +106,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             .placeholder(R.drawable.ic_user_place_holder)
             .into(binding.navView.getHeaderView(0).findViewById(R.id.nav_user_image))
 
-        binding.navView.getHeaderView(0).findViewById<TextView>(R.id.tv_username).text = loggedInUser.name
+        binding.navView.getHeaderView(0).findViewById<TextView>(R.id.tv_username).text =
+            loggedInUser.name
     }
 }
