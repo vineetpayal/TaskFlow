@@ -4,7 +4,7 @@
     android:layout_height="@dimen/height_of_nav_main"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/splash_background"
+    android:background="@color/primaryColour"
     android:gravity="bottom"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">

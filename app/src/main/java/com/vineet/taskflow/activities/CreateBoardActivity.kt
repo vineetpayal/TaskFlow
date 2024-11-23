@@ -10,25 +10,41 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.provider.MediaStore.Images.Media.getBitmap
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.vineet.taskflow.R
 import com.vineet.taskflow.databinding.ActivityCreateBoardBinding
+import com.vineet.taskflow.firebase.FirestoreClass
+import com.vineet.taskflow.models.Board
+import com.vineet.taskflow.utils.Constants
+import io.appwrite.Client
+import io.appwrite.ID
 import io.appwrite.Permission
+import io.appwrite.models.InputFile
+import io.appwrite.services.Storage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
-class CreateBoardActivity : AppCompatActivity() {
+class CreateBoardActivity : BaseActivity() {
 
     private lateinit var binding: ActivityCreateBoardBinding
     private lateinit var mSelectedImageUri: Uri
     private lateinit var mSelectImageFile: File
+    private lateinit var selectImageUrl: String
+
+    private lateinit var mUsername: String
 
     companion object {
         const val IMAGE_REQUEST_CODE = 1
@@ -39,8 +55,11 @@ class CreateBoardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateBoardBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setUpActionBar()
+
+        if (intent.hasExtra(Constants.NAME)) {
+            mUsername = intent.getStringExtra(Constants.NAME)!!
+        }
 
         binding.ivBoardImage.setOnClickListener {
 
@@ -55,6 +74,84 @@ class CreateBoardActivity : AppCompatActivity() {
                 )
             }
         }
+
+        binding.btnCreate.setOnClickListener {
+            if (mSelectedImageUri != null) {
+                lifecycleScope.launch {
+                    withContext(IO) {
+                        try {
+                            uploadBoardImage()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+            } else {
+                showProgressDialog(resources.getString(R.string.please_wait))
+                createBoard()
+            }
+        }
+    }
+
+    private fun createBoard() {
+        val assignedUsersArrayList: ArrayList<String> = ArrayList()
+        assignedUsersArrayList.add(getCurrentUserID())
+
+        var board = Board(
+            binding.etBoardName.toString(),
+            selectImageUrl,
+            mUsername,
+            assignedUsersArrayList
+        )
+
+        FirestoreClass().createBoard(this, board)
+    }
+
+    private suspend fun uploadBoardImage() {
+        withContext(Dispatchers.Main) {
+            showProgressDialog(resources.getString(R.string.please_wait))
+        }
+        if (mSelectedImageUri != null) {
+
+            val client = Client(this)
+                .setEndpoint("https://cloud.appwrite.io/v1")
+                .setProject(Constants.PROJECT_ID);
+
+            val storage = Storage(client)
+
+            //upload file
+            val imageId = ID.unique()
+            val file = storage.createFile(
+                Constants.BOARD_IMAGE_BUCKET_ID,
+                fileId = imageId,
+                file = InputFile.fromFile(mSelectImageFile),
+            )
+
+            //get file url
+            val fileUrl = storage.getFile(
+                bucketId = Constants.BOARD_IMAGE_BUCKET_ID,
+                fileId = imageId
+            )
+
+            //build url from metadata
+            selectImageUrl = Constants.buildUrl(this, fileUrl)
+            Log.d("this", "uploadBoardImage: " + selectImageUrl)
+
+            withContext(Dispatchers.Main) {
+                Toast.makeText(
+                    this@CreateBoardActivity,
+                    "Board created successfully!",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
+            createBoard()
+        }
+    }
+
+    fun boardCreatedSuccessfully() {
+        hideProgressDialog()
+        finish()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -69,7 +166,7 @@ class CreateBoardActivity : AppCompatActivity() {
                 System.currentTimeMillis().toString() + "_selectedImg.jpg"
             )
 
-            convertBitmapToFile(mSelectImageFile, selectedBitmap)
+            Constants.convertBitmapToFile(mSelectImageFile, selectedBitmap)
 
             try {
                 Glide
@@ -101,19 +198,6 @@ class CreateBoardActivity : AppCompatActivity() {
                 .show()
         }
     }
-
-    fun convertBitmapToFile(destinationFile: File, bitmap: Bitmap) {
-        //create a file to write bitmap data
-        destinationFile.createNewFile()   //Convert bitmap to byte array
-        val bos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos)
-        val bitmapData = bos.toByteArray()   //write the bytes in file
-        val fos = FileOutputStream(destinationFile)
-        fos.write(bitmapData)
-        fos.flush()
-        fos.close()
-    }
-
 
     private fun setUpActionBar() {
         setSupportActionBar(binding.toolbarCreateBoardActivity)

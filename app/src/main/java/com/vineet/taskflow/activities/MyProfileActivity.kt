@@ -135,7 +135,7 @@ class MyProfileActivity : BaseActivity() {
             )
 
             //build url from metadata
-            profileImageUrl = buildUrl(fileUrl)
+            profileImageUrl = Constants.buildUrl(this,fileUrl)
 
             withContext(Dispatchers.Main) {
                 Toast.makeText(this@MyProfileActivity, "User Profile Updated", Toast.LENGTH_SHORT)
@@ -147,21 +147,8 @@ class MyProfileActivity : BaseActivity() {
         }
     }
 
-    private fun buildUrl(file: io.appwrite.models.File): String {
-        return "https://cloud.appwrite.io/v1/storage/buckets/${Constants.USER_PROFILE_BUCKET_ID}/files/${file.id}/view?project=${Constants.PROJECT_ID}"
-    }
 
-    fun convertBitmapToFile(destinationFile: File, bitmap: Bitmap) {
-        //create a file to write bitmap data
-        destinationFile.createNewFile()   //Convert bitmap to byte array
-        val bos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos)
-        val bitmapData = bos.toByteArray()   //write the bytes in file
-        val fos = FileOutputStream(destinationFile)
-        fos.write(bitmapData)
-        fos.flush()
-        fos.close()
-    }
+
 
 
     //image picker
@@ -185,7 +172,7 @@ class MyProfileActivity : BaseActivity() {
                 System.currentTimeMillis().toString() + "_selectedImg.jpg"
             )
 
-            convertBitmapToFile(selectedImageFile!!, selectedBitmap)
+            Constants.convertBitmapToFile(selectedImageFile!!, selectedBitmap)
 
 
             try {

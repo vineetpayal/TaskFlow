@@ -14,9 +14,11 @@ import com.vineet.taskflow.R
 import com.vineet.taskflow.databinding.ActivityMainBinding
 import com.vineet.taskflow.firebase.FirestoreClass
 import com.vineet.taskflow.models.User
+import com.vineet.taskflow.utils.Constants
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var mUsername : String
 
     companion object {
         const val MY_PROFILE_ACTIVITY_REQUEST_CODE: Int = 11
@@ -34,7 +36,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
 
         binding.appBarLayout.btnAdd.setOnClickListener {
-            startActivity(Intent(this, CreateBoardActivity::class.java))
+            val intent = Intent(this, CreateBoardActivity::class.java)
+            intent.putExtra(Constants.NAME, mUsername)
+            startActivity(intent)
         }
 
     }
@@ -99,6 +103,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     fun updateNavigationUserDetails(loggedInUser: User) {
+        mUsername = loggedInUser.name
         Glide
             .with(this)
             .load(loggedInUser.image)
