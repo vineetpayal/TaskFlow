@@ -40,9 +40,9 @@ import java.io.FileOutputStream
 class CreateBoardActivity : BaseActivity() {
 
     private lateinit var binding: ActivityCreateBoardBinding
-    private lateinit var mSelectedImageUri: Uri
+    private  var mSelectedImageUri: Uri? = null
     private lateinit var mSelectImageFile: File
-    private lateinit var selectImageUrl: String
+    private var selectImageUrl: String = ""
 
     private lateinit var mUsername: String
 
@@ -98,7 +98,7 @@ class CreateBoardActivity : BaseActivity() {
         assignedUsersArrayList.add(getCurrentUserID())
 
         var board = Board(
-            binding.etBoardName.toString(),
+            binding.etBoardName.text.toString(),
             selectImageUrl,
             mUsername,
             assignedUsersArrayList

@@ -6,6 +6,8 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.firestore.toObject
 import com.vineet.taskflow.activities.CreateBoardActivity
 import com.vineet.taskflow.activities.LoginActivity
 import com.vineet.taskflow.activities.MainActivity
@@ -44,6 +46,27 @@ class FirestoreClass {
             }
     }
 
+    fun getBoardsList(activity: MainActivity) {
+        mFireStore.collection(Constants.BOARDS)
+            .whereArrayContains(Constants.ASSIGNED_TO, getCurrentUserId())
+            .get()
+            .addOnSuccessListener { document ->
+                val boardsList: ArrayList<Board> = ArrayList()
+                for (i in document.documents) {
+                    val board = i.toObject(Board::class.java)!!
+                    board.documentId = i.id
+                    boardsList.add(board)
+                }
+                activity.populateBoardsList(boardsList)
+
+            }.addOnFailureListener {
+                activity.hideProgressDialog()
+                Log.i(activity.javaClass.simpleName, "getBoardsList: " + it)
+            }
+
+
+    }
+
     fun updateUserProfileData(activity: MyProfileActivity, userHashMap: Map<String, Any>) {
         mFireStore.collection(Constants.USERS)
             .document(getCurrentUserId())
@@ -60,7 +83,7 @@ class FirestoreClass {
             }
     }
 
-    fun loadUserData(activity: Activity) {
+    fun loadUserData(activity: Activity, readBoardsList : Boolean = false) {
         mFireStore.collection(Constants.USERS)
             .document(getCurrentUserId())
             .get()
@@ -72,7 +95,7 @@ class FirestoreClass {
                     }
 
                     is MainActivity -> {
-                        activity.updateNavigationUserDetails(loggedInUser)
+                        activity.updateNavigationUserDetails(loggedInUser, readBoardsList)
                     }
 
                     is MyProfileActivity -> {
