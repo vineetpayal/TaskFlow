@@ -30,6 +30,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     companion object {
         const val MY_PROFILE_ACTIVITY_REQUEST_CODE: Int = 11
+        const val CREATE_BOARD_REQUESR_CODE : Int = 12
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +51,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         binding.appBarLayout.btnAdd.setOnClickListener {
             val intent = Intent(this, CreateBoardActivity::class.java)
             intent.putExtra(Constants.NAME, mUsername)
-            startActivity(intent)
+            startActivityForResult(intent, CREATE_BOARD_REQUESR_CODE)
         }
 
     }
@@ -127,6 +128,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == MY_PROFILE_ACTIVITY_REQUEST_CODE) {
                 FirestoreClass().loadUserData(this)
+            }
+            if(requestCode == CREATE_BOARD_REQUESR_CODE){
+                FirestoreClass().getBoardsList(this)
             }
         }
     }
